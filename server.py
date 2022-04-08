@@ -1,3 +1,4 @@
+from types import CoroutineType
 from flask import Flask, render_template, jsonify
 import requests
 
@@ -22,7 +23,7 @@ def mapbox_js():
 @app.route("/locations", methods=["GET"])
 def get_geojson():
     url = 'https://coinmap.org/api/v1/venues/'
-    payload = {'limit': 10000} #change this default
+    payload = {'limit': 100} #change this default
     headers = {'content-type': 'application/json'}
     r = requests.get(url, params=payload, headers=headers)
     if r.status_code == 200:
@@ -50,3 +51,23 @@ def get_geojson():
 
 #function to construct request url with query params
 #function to construct geojson data
+
+@app.route("/location_popup/<id>", methods=["GET"])
+def get_popup_data(id):
+    """>>Check if it's possible to return html as a string"""
+    url = 'https://coinmap.org/api/v1/venues/' + str(id)
+    headers = {'content-type': 'application/json'}
+    r = requests.get(url, params=None, headers=headers)
+    if r.status_code == 200:
+        responsejson = r.json()
+        data = responsejson["venue"]
+        return jsonify(data)
+        """
+        f"
+        <h4>Name: {data['name']}</h4>
+        <h4>City: {data['city']}</h4>
+        <p>Phone: {data['phone']}</p>
+        <p>Email: {data['email']}</p>
+        <p>Website: {data['website']}</p>
+        "
+        """
