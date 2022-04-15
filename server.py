@@ -1,8 +1,10 @@
 from types import CoroutineType
 from flask import Flask, render_template, jsonify
+from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
+CORS(app)
 
 app.config.from_envvar('APP_CONFIG_FILE', silent=True)
 
@@ -23,7 +25,7 @@ def mapbox_js():
 @app.route("/locations", methods=["GET"])
 def get_geojson():
     url = 'https://coinmap.org/api/v1/venues/'
-    payload = {'limit': 100} #change this default
+    payload = {'limit': 1000} #change this default
     headers = {'content-type': 'application/json'}
     r = requests.get(url, params=payload, headers=headers)
     if r.status_code == 200:

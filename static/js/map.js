@@ -4,6 +4,8 @@ function initMap() {
 
     mapboxgl.accessToken = mapbox_access_key;
 
+    const filterGroup = document.getElementById('filter-group');
+
     //Base map
     const map = new mapboxgl.Map({
         container: 'map', // container ID
@@ -106,12 +108,11 @@ function initMap() {
         /** Check if there is already a popup on the map and if so, remove it */
         if (popUps[0]) popUps[0].remove();
 
-        var popupData;
-        var popupData = getPopUpData(currentFeature.properties.id)
-
         const popup = new mapboxgl.Popup({ closeOnClick: false })
             .setLngLat(currentFeature.geometry.coordinates)
-            .setHTML(`<p>${popupData.name}</p>`) //before used currentFeature.properties.name //contains html as string //perhaps this string can be returned from backend endpoint?
+            .setHTML(`<h4>Name: ${currentFeature.properties.name}</h4>
+                      <p>Category: ${currentFeature.properties.category}</p>
+                    `) //before used currentFeature.properties.name //contains html as string //perhaps this string can be returned from backend endpoint?
             .addTo(map);
     }
 
@@ -120,29 +121,19 @@ function initMap() {
             url: "http://127.0.0.1:5000/location_popup/" + String(id),
             dataType: 'JSON',
             success: function (response) {
-                console.log(response.length)
-                console.log(response)
+                //console.log(response.length)
+                //console.log(response)
                 var name = response.name;
                 var city = response.city;
                 var phone = response.phone;
                 var email = response.email;
                 var website = response.website;
 
-                var res =  
-                "<h4>Name:" +name+"</h4>"
-                "<h4>City:" +city+"</h4>"
-                "<p>Phone:" +phone+"</p>"
-                "<p>Email:" +email+"</p>"
-                "<p>Website:" +website+"</p>"
-                return JSON.parse(response.textContent)
+                return response
             }
         });
 
     }
-
-
-
-
 
     function normalize(string) {
         return string.trim().toLowerCase();
@@ -169,8 +160,9 @@ function initMap() {
     map.on('load', () => {
         map.addSource('locations', {
             'type': 'geojson',
-            'data': testdata, //use this url when testing is finished 'http://127.0.0.1:5000/locations'
+            'data': 'http://127.0.0.1:5000/locations', //use this url when testing is finished 'http://127.0.0.1:5000/locations'
         });
+        
         map.addLayer({
             'id': 'location',
             'source': 'locations',
@@ -182,6 +174,7 @@ function initMap() {
                 'circle-stroke-color': '#ffffff'
             }
         });
+
 
         map.on('movestart', () => {
             // reset features filter as the map starts moving
@@ -204,6 +197,60 @@ function initMap() {
                 // later use for filtering on `keyup`.
                 locations = uniqueFeatures;
             }
+
+            for (const feature of features) {
+
+                if (feature.properties.category=="nightlife") {
+                    feature.properties.category="bar"
+                }
+
+                var symbol = feature.properties.category;
+
+                console.log(symbol)
+
+                const layerID = `poi-${symbol}`;
+
+                // Add a layer for this symbol type if it hasn't been added already.
+                if (!map.getLayer(layerID)) {
+                    map.addLayer({
+                        'id': layerID,
+                        'type': 'symbol',
+                        'source': 'locations',
+                        'layout': {
+                            // These icons are a part of the Mapbox Light style.
+                            // To view all images available in a Mapbox style, open
+                            // the style in Mapbox Studio and click the "Images" tab.
+                            // To add a new image to the style at runtime see
+                            // https://docs.mapbox.com/mapbox-gl-js/example/add-image/
+                            'icon-image': `${symbol}-15`,
+                            'icon-allow-overlap': true
+                        },
+                        'filter': ['==', 'category', symbol]
+                    });
+
+                    // Add checkbox and label elements for the layer.
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.id = layerID;
+                    input.checked = true;
+                    filterGroup.appendChild(input);
+
+                    const label = document.createElement('label');
+                    label.setAttribute('for', layerID);
+                    label.textContent = symbol;
+                    filterGroup.appendChild(label);
+
+                    // When the checkbox changes, update the visibility of the layer.
+                    input.addEventListener('change', (e) => {
+                        map.setLayoutProperty(
+                            layerID,
+                            'visibility',
+                            e.target.checked ? 'visible' : 'none'
+                        );
+                    });
+                }
+            }
+
         });
 
         map.on('mousemove', 'location', (e) => {
