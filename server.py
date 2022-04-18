@@ -11,8 +11,11 @@ app.config.from_envvar('APP_CONFIG_FILE', silent=True)
 MAPBOX_ACCESS_KEY = app.config['MAPBOX_ACCESS_KEY']
 
 @app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+def home():
+    return render_template(
+        'home.html', 
+        home_message="This is the home page"
+    )
 
 @app.route('/mapbox')
 def mapbox_js():
@@ -73,3 +76,7 @@ def get_popup_data(id):
         <p>Website: {data['website']}</p>
         "
         """
+
+@app.route("/about", methods=["GET"])
+def about():
+    return render_template("about.html")

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>{{home_message}}</p>
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">Find crypto business near you</h1>
+        <p class="lead">Use our map to find businesses that accept crypto</p>
+        <hr class="my-4">
+        <p>Click the button below</p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{{ url_for('mapbox_js') }}" role="button">Go to Map</a>
+        </p>
+    </div>
+</div>
+
+{% endblock %}
