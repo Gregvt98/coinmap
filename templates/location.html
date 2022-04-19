@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <h1>Business Information</h1>
+    <ul>
+        {% for k,v in data.items() %}
+        {% if v %}
+        <li>{{k}}: {{v}}</li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+<div>
+    <h2>Comments</h2>
+    {% if comments_data %}
+    {% for com in comments_data%}
+    <p>{{com}}</p>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

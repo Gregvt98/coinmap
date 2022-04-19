@@ -1,17 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p>{{home_message}}</p>
 
-<div class="jumbotron jumbotron-fluid">
-    <div class="container">
-        <h1 class="display-4">Find crypto business near you</h1>
-        <p class="lead">Use our map to find businesses that accept crypto</p>
-        <hr class="my-4">
-        <p>Click the button below</p>
-        <p class="lead">
-            <a class="btn btn-primary btn-lg" href="{{ url_for('mapbox_js') }}" role="button">Go to Map</a>
-        </p>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="container-fluid bg-light">
+                <div class="jumbotron text-center">
+                    <h3>Looking for a crypto business?</h3>
+                    <p class="lead">Find crypto businesses near you</p>
+                    <p class="lead">
+                      <a class="btn btn-primary btn-lg" href="{{ url_for('mapbox_js') }}" role="button">Go to map</a>
+                    </p>
+                  </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="container-fluid bg-light">
+                <div class="jumbotron text-center">
+                    <h3>Own a crypto business?</h3>
+                    <p class="lead">Let crypto enthusiasts find you</p>
+                    <p class="lead">
+                      <a class="btn btn-primary btn-lg" href="#" role="button">Register a new business</a>
+                    </p>
+                  </div>
+            </div>
+        </div>
     </div>
 </div>
 

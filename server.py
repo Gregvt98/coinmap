@@ -57,25 +57,19 @@ def get_geojson():
 #function to construct request url with query params
 #function to construct geojson data
 
-@app.route("/location_popup/<id>", methods=["GET"])
-def get_popup_data(id):
-    """>>Check if it's possible to return html as a string"""
+@app.route("/location/<id>", methods=["GET"])
+def get_location_data(id):
     url = 'https://coinmap.org/api/v1/venues/' + str(id)
     headers = {'content-type': 'application/json'}
     r = requests.get(url, params=None, headers=headers)
     if r.status_code == 200:
         responsejson = r.json()
         data = responsejson["venue"]
-        return jsonify(data)
-        """
-        f"
-        <h4>Name: {data['name']}</h4>
-        <h4>City: {data['city']}</h4>
-        <p>Phone: {data['phone']}</p>
-        <p>Email: {data['email']}</p>
-        <p>Website: {data['website']}</p>
-        "
-        """
+    comments_url = "https://coinmap.org/api/v1/venues/"+ str(id) + "/comments/"
+    comments_r = requests.get(comments_url, params=None, headers=headers)
+    comments_json = comments_r.json()
+    comments = comments_json["comments"]
+    return render_template("location.html", data=data, comments_data=comments)
 
 @app.route("/about", methods=["GET"])
 def about():

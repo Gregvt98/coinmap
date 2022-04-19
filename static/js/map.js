@@ -112,23 +112,19 @@ function initMap() {
             .setLngLat(currentFeature.geometry.coordinates)
             .setHTML(`<h4>Name: ${currentFeature.properties.name}</h4>
                       <p>Category: ${currentFeature.properties.category}</p>
-                    `) //before used currentFeature.properties.name //contains html as string //perhaps this string can be returned from backend endpoint?
+                      <a href="#">Get directions</a> 
+                      <a href="http://127.0.0.1:5000/location/${currentFeature.properties.id}">View details</a> 
+                    `) 
+                    //add link to directions
+                    //before used currentFeature.properties.name //contains html as string //perhaps this string can be returned from backend endpoint?
             .addTo(map);
     }
 
     function getPopUpData(id) {
         $.ajax({
-            url: "http://127.0.0.1:5000/location_popup/" + String(id),
+            url: "http://127.0.0.1:5000/location/" + String(id),
             dataType: 'JSON',
             success: function (response) {
-                //console.log(response.length)
-                //console.log(response)
-                var name = response.name;
-                var city = response.city;
-                var phone = response.phone;
-                var email = response.email;
-                var website = response.website;
-
                 return response
             }
         });
@@ -160,7 +156,7 @@ function initMap() {
     map.on('load', () => {
         map.addSource('locations', {
             'type': 'geojson',
-            'data': 'http://127.0.0.1:5000/locations', //use this url when testing is finished 'http://127.0.0.1:5000/locations'
+            'data': testdata, //use this url when testing is finished 'http://127.0.0.1:5000/locations'
         });
         
         map.addLayer({
