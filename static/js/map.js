@@ -113,7 +113,7 @@ function initMap() {
             .setHTML(`<h4>Name: ${currentFeature.properties.name}</h4>
                       <p>Category: ${currentFeature.properties.category}</p>
                       <a href="#">Get directions</a> 
-                      <a href="http://127.0.0.1:5000/location/${currentFeature.properties.id}">View details</a> 
+                      <a href="http://127.0.0.1:5000/location/page/${currentFeature.properties.id}">View details</a> 
                     `) 
                     //add link to directions
                     //before used currentFeature.properties.name //contains html as string //perhaps this string can be returned from backend endpoint?
@@ -159,13 +159,14 @@ function initMap() {
             'data': testdata, //use this url when testing is finished 'http://127.0.0.1:5000/locations'
         });
         
+        // Add a base layer showing the locations.
         map.addLayer({
             'id': 'location',
             'source': 'locations',
             'type': 'circle',
             'paint': {
                 'circle-color': '#4264fb',
-                'circle-radius': 4,
+                'circle-radius': 2,
                 'circle-stroke-width': 2,
                 'circle-stroke-color': '#ffffff'
             }

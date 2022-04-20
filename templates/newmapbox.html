@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>Display a map on a webpage</title>
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet">
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <!--Include custom Static files-->
+        <script type="text/javascript">
+            var mapbox_access_key = '{{ ACCESS_KEY }}'
+            var data = '{{ marker_data }}'
+        </script>
+        <script type="text/javascript" src="{{url_for('static', filename='js/newmap.js')}}"></script>
+        <script type="text/javascript" src="{{url_for('static', filename='js/geolocation.js')}}"></script>
+
+        <!--Load test data-->
+        <script type="text/javascript" src="{{url_for('static', filename='js/testdata.js')}}"></script>
+        <!--Load actual data-->
+        
+        <link href="{{url_for('static', filename='css/newmap.css')}}" rel="stylesheet">
+        <style>
+            body { margin: 0; padding: 0; }
+            #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        </style>
+    </head>
+
+    <body>
+        <div id="map"></div>
+        <nav id="filter-group" class="filter-group"></nav>
+        <script>initMap()</script>
+    </body>
+
+</html>

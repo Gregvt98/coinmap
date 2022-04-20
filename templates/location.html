@@ -1,22 +1,121 @@
 {% extends 'base.html' %}
 
+<!-- Divide content by contact info, socials, ratings, comments, etc...-->
+
 {% block content %}
-<div>
-    <h1>Business Information</h1>
-    <ul>
-        {% for k,v in data.items() %}
-        {% if v %}
-        <li>{{k}}: {{v}}</li>
+<!-- First row -->
+
+<div class="container-fluid text-left" style="max-width: 90%; margin-top: 2rem; display: flex; justify-content: center;">
+    <div class="row">
+        {% if data["logo_url"] %}
+            <div class="col"></div>
+                <img src="{{data["logo_url"]}}" class="img-fluid" alt="Location logo or image">
+            </div>
         {% endif %}
-        {% endfor %}
-    </ul>
+      <div class="col">
+        <div class="card" style="width: 18rem;">
+            <div class="card-header">
+              Summary
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">Name: {{data["name"]}}</li>
+              <li class="list-group-item">City: {% if data["houseno"] %}{{data["city"]}}{% else %}Not specified{% endif %}</li>
+              <li class="list-group-item">Address: {% if data["street"] %}{% if data["houseno"] %}{{data["houseno"]}}{% endif %}{% if data["street"] %}{{data["street"]}},{% endif %}{% if data["postcode"] %}{{data["postcode"]}}{% endif %}{% else %}Not specified{% endif %}</li>
+              <li class="list-group-item">Accepted Coins: {% if data["coins"] %}{{data["coins"]}}{% else %}Not specified{% endif %}</li>
+            </ul>
+          </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Second row -->
+<div class="container-fluid text-left bg-light" style="max-width: 90%; margin-top: 2rem">
+    <div class="row">
+        <div class="col">
+            <div class="container-fluid">
+                <h4>Contact</h4>
+                <ul>
+                    {% for k,v in data.items() %}
+                    {% if k in ["phone", "email", "website"] %}
+                    {% if v %}
+                    {% if k=="website" %}
+                    <li>{{k}}: <a href="{{v}}">{{v}}</a></li>
+                    {% else %}
+                    <li>{{k}}: {{v}}</li>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            <div class="container-fluid">
+                <h4>Socials</h4>
+                <ul>
+                    {% for k,v in data.items() %}
+                    {% if k in ["instagram", "twitter", "facebook"] %}
+                    {% if v %}
+                    <li>{{k}}: {{v}}</li>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            <div class="container-fluid">
+                <h4>Ratings</h4>
+                <ul>
+                    {% if ratings_data != [0,0,0] %}
+                    {% for rat in ratings_data[0:3]%}
+                    <li>{{rat}}</li>
+                    {% endfor %}
+                    {% else %}
+                    <li>No ratings</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <h2>Comments</h2>
-    {% if comments_data %}
-    {% for com in comments_data%}
-    <p>{{com}}</p>
-    {% endfor %}
-    {% endif %}
+<div class="container-fluid" style="margin-top: 2rem; margin-bottom: 2rem;">
+    <!-- Description -->
+    <div class="card text-center bg-light"
+        style="max-width: 90%; display: flex; margin-left: auto; margin-right: auto;">
+        <h4 class="card-title" style="padding-top: 10px;">Description</h4>
+        <div class="card-body text-dark">
+            {% if data["description"] %}
+                {{ data["description"] }}
+            {% else %}
+                <p>No description available</p>
+            {% endif %}
+            
+        </div>
+    </div>
+    <!-- Comments -->
+    <br>
+
+    <div class="card text-center" style="max-width: 90%; display: flex; margin-left: auto; margin-right: auto;">
+        <div class="card-header">
+          Comments
+        </div>
+        <div class="card-body">
+          <p class="card-text">
+              {% if comments_data %}
+            {{ comments_data[0:3] }}
+            {% else %}
+            <p>No comments</p>
+            {% endif %}</p>
+          <a href="#" class="btn btn-primary">Leave a comment</a>
+        </div>
+        <div class="card-footer text-muted">
+          2 days ago
+        </div>
+      </div>
+    <br>
 </div>
+
+
+
 {% endblock %}
