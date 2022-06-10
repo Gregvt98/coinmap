@@ -6,6 +6,7 @@ import requests
 import requests_cache
 import sqlite3
 import time 
+import json
 
 app = Flask(__name__)
 CORS(app)
