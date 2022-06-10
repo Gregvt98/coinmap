@@ -3,7 +3,9 @@ from types import CoroutineType
 from flask import Flask, render_template, jsonify
 from flask_cors import CORS
 import requests
+import requests_cache
 import sqlite3
+import time 
 
 app = Flask(__name__)
 CORS(app)
@@ -11,6 +13,8 @@ CORS(app)
 app.config.from_envvar('APP_CONFIG_FILE', silent=True)
 
 MAPBOX_ACCESS_KEY = app.config['MAPBOX_ACCESS_KEY']
+
+requests_cache.install_cache('coinmap_cache', backend='sqlite', expire_after=600)
 
 @app.route("/")
 def home():
@@ -40,7 +44,9 @@ def get_geojson():
     url = 'https://coinmap.org/api/v1/venues/'
     payload = {'limit': 10000} #change this default
     headers = {'content-type': 'application/json'}
+    now = time.ctime(int(time.time()))
     r = requests.get(url, params=payload, headers=headers)
+    print("Time: {0} / Used Cache: {1}".format(now, r.from_cache)) #caching message
     if r.status_code == 200:
         responsejson = r.json()
         data = responsejson["venues"]
