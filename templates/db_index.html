@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Locations {% endblock %}</h1>
+    {% for location in locations %}
+        <div class='location'>
+            <h2>{{ location['title'] }}</h2>
+            <h3>{{ location['category'] }}</h3>
+            <p>created: {{ location['created'] }}</p>
+            <p>coordinates: {{ location['lat1'] }} {{ location['lat2'] }} {{ location['lon1'] }} {{ location['lon2'] }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

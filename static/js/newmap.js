@@ -121,7 +121,6 @@ function initMap() {
             const coordinates = e.features[0].geometry.coordinates.slice();
             const html = `
                         <h3>Name: ${e.features[0].properties.name}</h3>
-                        <p>Category: ${e.features[0].properties.category}</p>
                         <a href="http://127.0.0.1:5000/location/page/${e.features[0].properties.id}">View details</a>
                         <a href="#">Get Directions</a>
                         `

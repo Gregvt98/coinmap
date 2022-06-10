@@ -3,6 +3,7 @@ from types import CoroutineType
 from flask import Flask, render_template, jsonify
 from flask_cors import CORS
 import requests
+import sqlite3
 
 app = Flask(__name__)
 CORS(app)
@@ -122,3 +123,17 @@ def get_location_data(id):
 @app.route("/about", methods=["GET"])
 def about():
     return render_template("about.html")
+
+#DATABASE
+def get_db_connection():
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+@app.route('/database')
+def index():
+    conn = get_db_connection()
+    locations = conn.execute('SELECT * FROM locations').fetchall()
+    conn.close()
+    return render_template('db_index.html', locations=locations)
